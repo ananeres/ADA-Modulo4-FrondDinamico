@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Formulário Aula 2</title>
+  </head>
+  <body>
+    <form id="formulario" onsubmit="enviarParaTabela(event)">
+      <div id="form-cpf">
+        <label for="">Nome:</label>
+        <input id="nome" type="text" class="input" />
+      </div>
+
+      <div id="form-cpf">
+        <label for="">CPF:</label>
+        <input
+          id="cpf"
+          type="text"
+          class="input"
+          onkeydown="onlyNumber(event)"
+          onkeyup="maskCPF(this)"
+          maxlength="14"
+          autocomplete="off"
+        />
+      </div>
+
+      <div id="form-tel">
+        <label for="">Telefone:</label>
+        <input
+          id="tel"
+          type="text"
+          class="input"
+          onkeyup="maskTel(this)"
+          maxlength="15"
+        />
+      </div>
+
+      <button type="submit">Enviar</button>
+    </form>
+
+    <table border="1">
+      <thead>
+        <tr>
+          Nome
+        </tr>
+        <tr>
+          CPF
+        </tr>
+        <tr>
+          Telefone
+        </tr>
+      </thead>
+
+      <tbody id="dados"></tbody>
+    </table>
+  </body>
+
+  <script>
+    //event pq queremos o evento da tecla. Faz com que a tecla não apareça.
+    function onlyNumber(event) {
+      console.log(event.key);
+      const blabla = /\D/g;
+      //aqui foi necessário add backspace pq ele nao tava pegando, ja que é diferente de numero, então fazemos algo para que ele aceite. :D
+      if (blabla.test(event.key) && event.key !== "Backspace") {
+        event.preventDefault();
+      }
+    }
+
+    function maskCPF(inputCPF) {
+      //const valorInput = inputCPF.value;
+      const cpfNumeros = inputCPF.value.replace(/\D/g, "");
+
+      if (cpfNumeros.length < 4) {
+        inputCPF.value = cpfNumeros;
+      } else if (cpfNumeros.length < 7) {
+        inputCPF.value = cpfNumeros.substring(0, 3) + "." + cpfNumeros.substring(3);
+      } else if (cpfNumeros.length < 10) { 
+        inputCPF.value =cpfNumeros.substring(0, 3) + "." + cpfNumeros.substring(3, 6) + "." + cpfNumeros.substring(6); 
+      } else { 
+        inputCPF.value = cpfNumeros.substring(0, 3) + "." + cpfNumeros.substring(3, 6) + "." + cpfNumeros.substring(6, 9) + "-" + cpfNumeros.substring(9)}
+    }
+
+    function maskTel(inputTel) {
+      const valorTelInput = inputTel.value;
+      const telNumeros = valorTelInput.replace(/\D/g, "");
+
+      if (telNumeros.length <= 2) {
+        inputTel.value = "(" + telNumeros;
+      } else if (telNumeros.length <= 7) {
+        inputTel.value = "(" + telNumeros.substring(0, 2) + ") " + telNumeros.substring(2);
+      } else {
+        inputTel.value = "(" + telNumeros.substring(0, 2) + ") " + telNumeros.substring(2, 7) + "-" + telNumeros.substring(7);
+      }
+    }
+
+    function enviarParaTabela(event) {
+      event.preventDefault();
+
+      const nome = document.getElementById("nome");
+      const cpf = document.getElementById("cpf");
+      const tel = document.getElementById("tel");
+
+      //inserindo na tabela
+      const tbody = document.getElementById("dados");
+
+      //inserir linha na tabela
+      const row = tbody.insertRow();
+
+      //inserir valores
+      const colunaNome = row.insertCell(0);
+      const colunaCPF = row.insertCell(1);
+      const colunaTel = row.insertCell(2);
+
+      //colocando valores na coluna
+      colunaNome.innerHTML = nome.value;
+      colunaCPF.innerHTML = cpf.value;
+      colunaTel.innerHTML = tel.value;
+
+      document.getElementById("formulario").reset();
+    }
+  </script>
+</html>
